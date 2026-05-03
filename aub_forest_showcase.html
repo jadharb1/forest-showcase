@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUB Pine Forest — Food Forest Design | Jad Harb | LDEM 268</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g1: #0d1f10;
+  --g2: #1a3a1e;
+  --g3: #2c5f2d;
+  --g4: #3d7a3e;
+  --g5: #97bc62;
+  --g6: #d4e8c2;
+  --gold: #c8960c;
+  --lgold: #f5d97e;
+  --water: #2b7ebd;
+  --lwater: #bee3f8;
+  --soil: #8b5e3c;
+  --cream: #faf6ee;
+  --charcoal: #1a1a1a;
+  --mid: #4a5568;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--g1);
+  color:var(--cream);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor{
+  width:12px;height:12px;
+  background:var(--g5);
+  border-radius:50%;
+  position:fixed;top:0;left:0;
+  pointer-events:none;z-index:9999;
+  transition:transform 0.15s ease, background 0.2s;
+  transform:translate(-50%,-50%);
+}
+.cursor-ring{
+  width:36px;height:36px;
+  border:1.5px solid var(--g5);
+  border-radius:50%;
+  position:fixed;top:0;left:0;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.25s ease, opacity 0.2s;
+  opacity:0.5;
+}
+
+/* ── FLOATING PARTICLES ── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{
+  position:absolute;
+  border-radius:50%;
+  background:var(--g5);
+  opacity:0;
+  animation:float linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:0.15}
+  90%{opacity:0.08}
+  100%{transform:translateY(-20vh) scale(1);opacity:0}
+}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  position:relative;
+  overflow:hidden;
+  padding:80px 40px;
+}
+
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(44,95,45,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(43,126,189,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 20%, rgba(200,150,12,0.08) 0%, transparent 60%);
+  animation:heroPulse 8s ease-in-out infinite alternate;
+}
+@keyframes heroPulse{
+  0%{opacity:0.6}100%{opacity:1}
+}
+
+.hero-tree-bg{
+  position:absolute;bottom:0;left:0;right:0;
+  height:55%;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(26,58,30,0.9) 0%, transparent 65%);
+}
+
+/* Animated trees in hero */
+.hero-trees{
+  position:absolute;bottom:0;left:0;right:0;
+  height:220px;
+  display:flex;align-items:flex-end;justify-content:center;gap:0;
+  overflow:hidden;
+}
+
+.h-tree{
+  position:relative;flex-shrink:0;
+  animation:treeSway ease-in-out infinite alternate;
+  transform-origin:bottom center;
+}
+@keyframes treeSway{
+  0%{transform:rotate(-1.2deg) scaleY(1)}
+  100%{transform:rotate(1.2deg) scaleY(1.01)}
+}
+
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;
+  max-width:900px;
+}
+
+.hero-eyebrow{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  letter-spacing:4px;
+  color:var(--g5);
+  text-transform:uppercase;
+  margin-bottom:24px;
+  opacity:0;
+  animation:fadeUp 0.8s 0.3s forwards;
+}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(42px,7vw,88px);
+  font-weight:900;
+  line-height:1.0;
+  margin-bottom:16px;
+  opacity:0;
+  animation:fadeUp 0.9s 0.5s forwards;
+}
+
+.hero-title .accent{
+  color:var(--g5);
+  font-style:italic;
+}
+
+.hero-subtitle{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(14px,2vw,20px);
+  font-weight:400;
+  font-style:italic;
+  color:var(--g6);
+  opacity:0.8;
+  margin-bottom:48px;
+  opacity:0;
+  animation:fadeUp 0.9s 0.7s forwards;
+  line-height:1.6;
+  max-width:700px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.hero-stats{
+  display:flex;gap:40px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:56px;
+  opacity:0;
+  animation:fadeUp 0.9s 0.9s forwards;
+}
+
+.stat{
+  text-align:center;
+  padding:16px 24px;
+  border:1px solid rgba(151,188,98,0.25);
+  border-radius:4px;
+  background:rgba(26,58,30,0.4);
+  backdrop-filter:blur(8px);
+  transition:transform 0.3s, border-color 0.3s;
+}
+.stat:hover{transform:translateY(-4px);border-color:var(--g5)}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:32px;font-weight:700;
+  color:var(--lgold);display:block;
+}
+.stat-label{
+  font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--g5);
+  margin-top:4px;
+}
+
+.hero-scroll{
+  opacity:0;animation:fadeUp 1s 1.2s forwards;
+  color:var(--g5);font-size:12px;letter-spacing:3px;
+  text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.scroll-line{
+  width:1px;height:48px;
+  background:linear-gradient(to bottom,var(--g5),transparent);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(0.8)}50%{opacity:1;transform:scaleY(1)}}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── SECTION BASE ── */
+section{
+  position:relative;z-index:1;
+  padding:100px 40px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.section-label{
+  font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--g5);
+  margin-bottom:16px;display:block;
+}
+
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,5vw,52px);
+  font-weight:700;line-height:1.1;
+  margin-bottom:48px;
+}
+
+/* ── FULL WIDTH DIVIDERS ── */
+.divider{
+  width:100%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(151,188,98,0.3),transparent);
+  margin:0;
+}
+
+/* ── PROBLEM SECTION ── */
+#problem-section{
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(139,94,60,0.08) 0%, transparent 70%);
+}
+
+.problem-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:2px;
+  border:1px solid rgba(151,188,98,0.15);
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.problem-item{
+  padding:32px 28px;
+  background:rgba(26,58,30,0.3);
+  transition:background 0.3s, transform 0.3s;
+  position:relative;overflow:hidden;
+}
+.problem-item::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,transparent,var(--soil),transparent);
+  transform:scaleX(0);transition:transform 0.4s;
+}
+.problem-item:hover::before{transform:scaleX(1)}
+.problem-item:hover{background:rgba(44,95,45,0.25);transform:translateY(-2px)}
+
+.prob-icon{font-size:28px;margin-bottom:16px;display:block}
+.prob-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  margin-bottom:10px;color:var(--lgold);
+}
+.prob-text{font-size:14px;line-height:1.7;color:var(--g6);opacity:0.85}
+
+/* ── TRANSFORMATION STRIP ── */
+.transform-strip{
+  background:linear-gradient(135deg,var(--g2),var(--g1) 50%,rgba(43,126,189,0.08));
+  border-top:1px solid rgba(151,188,98,0.15);
+  border-bottom:1px solid rgba(151,188,98,0.15);
+  padding:80px 40px;
+  text-align:center;
+}
+.transform-strip .big-text{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(24px,4vw,52px);
+  line-height:1.3;
+  max-width:900px;margin:0 auto;
+}
+.transform-strip .big-text em{color:var(--g5);font-style:normal}
+
+/* ── ZONES SECTION ── */
+#zones{padding:100px 40px}
+
+.zones-header{
+  max-width:1200px;margin:0 auto 64px;
+}
+
+.zones-tabs{
+  display:flex;gap:4px;
+  max-width:1200px;margin:0 auto;
+  border-bottom:1px solid rgba(151,188,98,0.2);
+  margin-bottom:0;
+}
+.zone-tab{
+  padding:16px 32px;
+  font-family:'Space Mono',monospace;
+  font-size:13px;letter-spacing:1px;
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+  transition:all 0.3s;
+  color:rgba(212,232,194,0.5);
+  background:none;border-top:none;border-left:none;border-right:none;
+}
+.zone-tab.active{
+  color:var(--cream);
+  border-bottom-color:var(--g5);
+}
+.zone-tab:hover{color:var(--g6)}
+
+.zones-content{
+  max-width:1200px;margin:0 auto;
+  background:rgba(26,58,30,0.25);
+  border:1px solid rgba(151,188,98,0.15);
+  border-top:none;
+  border-radius:0 0 8px 8px;
+}
+
+.zone-panel{
+  display:none;
+  grid-template-columns:1fr 1.2fr;
+  gap:0;
+  min-height:440px;
+}
+.zone-panel.active{display:grid}
+
+.zone-illustration{
+  padding:48px;
+  display:flex;align-items:center;justify-content:center;
+  border-right:1px solid rgba(151,188,98,0.12);
+  position:relative;overflow:hidden;
+}
+
+.zone-info{
+  padding:48px;
+}
+.zone-number{
+  font-family:'Space Mono',monospace;
+  font-size:80px;font-weight:700;
+  line-height:1;
+  color:rgba(151,188,98,0.12);
+  position:absolute;top:20px;right:30px;
+}
+.zone-name{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:700;
+  margin-bottom:8px;
+  color:var(--cream);
+}
+.zone-tagline{
+  font-size:14px;color:var(--g5);
+  font-style:italic;margin-bottom:28px;
+  letter-spacing:0.5px;
+}
+.zone-items{
+  list-style:none;display:flex;flex-direction:column;gap:10px;
+  margin-bottom:28px;
+}
+.zone-items li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:14px;color:var(--g6);line-height:1.5;
+}
+.zone-items li::before{
+  content:'';
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--g5);
+  flex-shrink:0;
+  margin-top:7px;
+}
+.zone-benefit{
+  padding:16px 20px;
+  background:rgba(200,150,12,0.08);
+  border-left:3px solid var(--gold);
+  border-radius:0 4px 4px 0;
+  font-size:13px;color:var(--lgold);
+  line-height:1.6;
+}
+
+/* ZONE SVG ILLUSTRATIONS */
+.z-svg{width:100%;max-width:320px;height:auto}
+
+/* ── SYSTEM FLOWS ── */
+#flows{
+  background:rgba(26,58,30,0.15);
+  padding:100px 40px;
+}
+.flows-wrapper{max-width:1200px;margin:0 auto}
+
+.flow-diagram{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  margin-top:48px;
+  border:1px solid rgba(151,188,98,0.15);
+  border-radius:8px;
+  overflow:hidden;
+}
+.flow-node{
+  padding:36px 28px;
+  text-align:center;
+  position:relative;
+  border-right:1px solid rgba(151,188,98,0.1);
+  transition:background 0.3s;
+}
+.flow-node:last-child{border-right:none}
+.flow-node:hover{background:rgba(44,95,45,0.2)}
+.flow-icon{
+  width:56px;height:56px;
+  border-radius:50%;
+  border:2px solid;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  margin:0 auto 16px;
+}
+.flow-arrow{
+  position:absolute;right:-14px;top:50%;
+  transform:translateY(-50%);
+  font-size:18px;color:var(--g5);
+  z-index:2;
+  animation:arrowPulse 2s ease-in-out infinite;
+}
+@keyframes arrowPulse{
+  0%,100%{opacity:0.4;transform:translateY(-50%) translateX(0)}
+  50%{opacity:1;transform:translateY(-50%) translateX(3px)}
+}
+.flow-title{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-weight:700;
+  margin-bottom:8px;
+}
+.flow-desc{font-size:13px;color:var(--g6);opacity:0.8;line-height:1.6}
+
+/* ── CLIMATE RING ── */
+#climate{padding:100px 40px}
+.climate-inner{max-width:1200px;margin:0 auto}
+.climate-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:48px;
+  align-items:center;
+}
+.climate-viz{
+  display:flex;align-items:center;justify-content:center;
+}
+.climate-data{display:flex;flex-direction:column;gap:20px}
+.climate-row{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;
+  background:rgba(26,58,30,0.3);
+  border-radius:4px;
+  border:1px solid rgba(151,188,98,0.1);
+  transition:border-color 0.3s, transform 0.3s;
+}
+.climate-row:hover{border-color:rgba(151,188,98,0.35);transform:translateX(4px)}
+.climate-icon{font-size:22px;width:36px;flex-shrink:0}
+.climate-label{font-size:13px;color:var(--g5);text-transform:uppercase;letter-spacing:1px}
+.climate-val{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+
+/* ── PLANTS GRID ── */
+#plants{padding:100px 40px}
+.plants-inner{max-width:1200px;margin:0 auto}
+.plants-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;
+  margin-top:48px;
+}
+.plant-card{
+  padding:24px 20px;
+  background:rgba(26,58,30,0.35);
+  border:1px solid rgba(151,188,98,0.1);
+  border-radius:6px;
+  transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
+  cursor:default;
+  position:relative;overflow:hidden;
+}
+.plant-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(151,188,98,0.05),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.plant-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(151,188,98,0.4);
+  background:rgba(44,95,45,0.3);
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+.plant-card:hover::after{opacity:1}
+.plant-zone{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;
+  padding:3px 8px;border-radius:2px;
+  display:inline-block;margin-bottom:12px;
+  font-weight:700;
+}
+.z1{background:rgba(44,95,45,0.5);color:#90ee90}
+.z2{background:rgba(61,122,62,0.5);color:#aee488}
+.z3{background:rgba(43,126,189,0.4);color:#90cdf4}
+.z4{background:rgba(139,94,60,0.5);color:#e8c990}
+.plant-name{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  margin-bottom:4px;
+}
+.plant-sci{font-size:12px;font-style:italic;color:var(--g5);margin-bottom:10px}
+.plant-function{font-size:12px;color:var(--g6);opacity:0.8;line-height:1.5}
+
+/* ── TIMELINE ── */
+#timeline{
+  padding:100px 40px;
+  background:rgba(26,58,30,0.12);
+}
+.timeline-inner{max-width:1000px;margin:0 auto}
+.tl-track{
+  position:relative;
+  margin-top:60px;
+  padding-left:40px;
+}
+.tl-track::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,var(--g5),var(--g3),transparent);
+}
+.tl-item{
+  position:relative;margin-bottom:44px;
+  opacity:0;transform:translateX(-20px);
+  transition:all 0.6s;
+}
+.tl-item.visible{opacity:1;transform:translateX(0)}
+.tl-dot{
+  position:absolute;left:-46px;top:8px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--g5);
+  border:2px solid var(--g1);
+  box-shadow:0 0 0 4px rgba(151,188,98,0.15);
+}
+.tl-phase{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;
+  color:var(--gold);text-transform:uppercase;
+  margin-bottom:6px;
+}
+.tl-title{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;
+  margin-bottom:10px;
+}
+.tl-desc{font-size:14px;color:var(--g6);line-height:1.7}
+
+/* ── BUDGET ── */
+#budget{padding:100px 40px}
+.budget-inner{max-width:1000px;margin:0 auto}
+.budget-rows{margin-top:40px}
+.budget-row{
+  display:flex;align-items:center;gap:20px;
+  padding:16px 0;
+  border-bottom:1px solid rgba(151,188,98,0.08);
+  transition:background 0.2s;
+}
+.budget-row:hover{
+  background:rgba(44,95,45,0.1);
+  padding-left:12px;margin-left:-12px;
+  border-radius:4px;
+}
+.budget-item{flex:1;font-size:15px;color:var(--g6)}
+.budget-bar-wrap{flex:2;height:6px;background:rgba(151,188,98,0.1);border-radius:3px;overflow:hidden}
+.budget-bar{
+  height:100%;border-radius:3px;
+  background:linear-gradient(to right,var(--g4),var(--g5));
+  width:0;transition:width 1.2s ease;
+}
+.budget-amount{
+  font-family:'Space Mono',monospace;
+  font-size:14px;color:var(--lgold);
+  min-width:80px;text-align:right;
+}
+.budget-total{
+  margin-top:24px;padding:24px;
+  background:rgba(200,150,12,0.08);
+  border:1px solid rgba(200,150,12,0.25);
+  border-radius:6px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.budget-total-label{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;
+}
+.budget-total-num{
+  font-family:'Space Mono',monospace;
+  font-size:28px;font-weight:700;
+  color:var(--lgold);
+}
+
+/* ── KEYPOINTS / QUOTE ── */
+.manifesto{
+  padding:120px 40px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 50%, rgba(44,95,45,0.12) 0%, transparent 70%);
+  border-top:1px solid rgba(151,188,98,0.1);
+  border-bottom:1px solid rgba(151,188,98,0.1);
+}
+.manifesto-text{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(20px,3.5vw,38px);
+  font-style:italic;
+  line-height:1.6;
+  max-width:840px;margin:0 auto;
+  color:var(--cream);
+}
+.manifesto-text em{color:var(--g5);font-style:normal}
+.manifesto-author{
+  margin-top:32px;
+  font-family:'Space Mono',monospace;
+  font-size:12px;letter-spacing:3px;
+  color:var(--g5);text-transform:uppercase;
+}
+
+/* ── FOOTER ── */
+footer{
+  padding:60px 40px;
+  border-top:1px solid rgba(151,188,98,0.12);
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:900;
+  color:var(--g5);letter-spacing:2px;
+}
+.footer-meta{
+  font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:2px;
+  color:rgba(151,188,98,0.5);
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal{
+  opacity:0;transform:translateY(40px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── PINE TREE SVG HELPER ── */
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="particles"></div>
+
+<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tree-bg"></div>
+
+  <div class="hero-trees" id="heroTrees"></div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">LDEM 268 · Earth Care · Jad Harb · April 2026</span>
+    <h1 class="hero-title">
+      AUB <span class="accent">Pine Forest</span><br>Food Forest
+    </h1>
+    <p class="hero-subtitle">
+      Transforming a neglected monoculture into a thriving multi-layer food forest —
+      without cutting a single tree.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">0.8</span>
+        <span class="stat-label">Hectares</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Design Zones</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">16</span>
+        <span class="stat-label">Plant Species</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">$1,100</span>
+        <span class="stat-label">Total Budget</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">0</span>
+        <span class="stat-label">Trees Removed</span>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════ PROBLEM ══════════════════════════════ -->
+<section id="problem-section">
+  <div class="reveal">
+    <span class="section-label">The Problem</span>
+    <h2 class="section-title">Five critical failures<br>on 0.8 hectares of campus land</h2>
+  </div>
+
+  <div class="problem-grid reveal">
+    <div class="problem-item">
+      <span class="prob-icon">🌲</span>
+      <div class="prob-title">Monoculture Canopy</div>
+      <p class="prob-text">Pinus brutia plantation creates zero plant diversity at ground level. No understory, no shrubs, no life below 15m.</p>
+    </div>
+    <div class="problem-item">
+      <span class="prob-icon">🧪</span>
+      <div class="prob-title">Acidic Compacted Soil</div>
+      <p class="prob-text">pH ~5.5 from decades of pine needle litter. Suppresses ALL other plant germination. Nothing can grow.</p>
+    </div>
+    <div class="problem-item">
+      <span class="prob-icon">💧</span>
+      <div class="prob-title">Zero Water Harvesting</div>
+      <p class="prob-text">860mm of annual rainfall hits compacted soil and runs straight into Bliss St. Every drop is wasted.</p>
+    </div>
+    <div class="problem-item">
+      <span class="prob-icon">🚫</span>
+      <div class="prob-title">No Food Production</div>
+      <p class="prob-text">0.8 Ha of prime campus land produces zero food for the AUB community. Completely underutilized.</p>
+    </div>
+    <div class="problem-item">
+      <span class="prob-icon">🦋</span>
+      <div class="prob-title">Zero Biodiversity</div>
+      <p class="prob-text">No pollinators, no wildlife habitat, no educational value. An ecological dead zone despite being a living campus.</p>
+    </div>
+    <div class="problem-item" style="background:rgba(200,150,12,0.06)">
+      <span class="prob-icon">⚡</span>
+      <div class="prob-title">The Constraint</div>
+      <p class="prob-text" style="color:var(--lgold)">AUB policy: <strong>not a single tree can be cut.</strong> All design must work WITH the existing trees, between trunks, under canopy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ TRANSFORM STRIP ══════════════════════════════ -->
+<div class="transform-strip">
+  <p class="big-text">
+    "From <em>dead ground</em> under 15-metre pines to a <em>7-layer food forest</em> — 
+    fruit trees, shrubs, herbs, ground cover, climbers and mushrooms — 
+    all growing together under an <em>untouched pine canopy</em>."
+  </p>
+</div>
+
+<!-- ══════════════════════════════ ZONES ══════════════════════════════ -->
+<div id="zones" style="padding:100px 0">
+  <div class="zones-header" style="padding:0 40px">
+    <span class="section-label reveal">Design Zones</span>
+    <h2 class="section-title reveal">Four zones.<br>One working ecosystem.</h2>
+  </div>
+
+  <div class="zones-tabs">
+    <button class="zone-tab active" onclick="showZone(0)">ZONE 1 — Herbs</button>
+    <button class="zone-tab" onclick="showZone(1)">ZONE 2 — Food Forest</button>
+    <button class="zone-tab" onclick="showZone(2)">ZONE 3 — Water</button>
+    <button class="zone-tab" onclick="showZone(3)">ZONE 4 — Wildlife</button>
+  </div>
+
+  <div class="zones-content">
+
+    <!-- ZONE 1 -->
+    <div class="zone-panel active" id="zone-0">
+      <div class="zone-illustration" style="background:rgba(44,95,45,0.15)">
+        <div class="zone-number">1</div>
+        <svg viewBox="0 0 280 260" class="z-svg">
+          <!-- Sky -->
+          <rect width="280" height="260" fill="#1a2e1a" rx="4"/>
+          <!-- Pine trees (existing) -->
+          <g opacity="0.7">
+            <polygon points="30,180 55,100 80,180" fill="#1C4A1E"/>
+            <polygon points="45,175 55,115 65,175" fill="#2C6030"/>
+            <rect x="51" y="180" width="8" height="28" fill="#5C3D1E"/>
+            <polygon points="180,185 210,95 240,185" fill="#1C4A1E"/>
+            <polygon points="195,180 210,110 225,180" fill="#2C6030"/>
+            <rect x="206" y="185" width="8" height="28" fill="#5C3D1E"/>
+          </g>
+          <!-- Ground -->
+          <rect x="0" y="208" width="280" height="52" fill="#5C3D1E"/>
+          <rect x="0" y="200" width="280" height="10" fill="#8B5E3C"/>
+          <!-- Herb spiral -->
+          <ellipse cx="140" cy="198" rx="36" ry="12" fill="#A8E070" opacity="0.5"/>
+          <ellipse cx="140" cy="196" rx="28" ry="9" fill="#C5E0A0" opacity="0.7"/>
+          <circle cx="140" cy="194" r="8" fill="#97BC62"/>
+          <circle cx="140" cy="194" r="3" fill="#2C5F2D"/>
+          <!-- Raised beds -->
+          <rect x="90" y="196" width="30" height="10" rx="3" fill="#A8D050" opacity="0.9"/>
+          <rect x="125" y="196" width="30" height="10" rx="3" fill="#A8D050" opacity="0.9"/>
+          <!-- Seating -->
+          <rect x="185" y="192" width="38" height="16" rx="3" fill="#C8960C" opacity="0.8"/>
+          <rect x="188" y="188" width="32" height="6" rx="2" fill="#8B5E3C"/>
+          <!-- Labels -->
+          <text x="140" y="175" font-family="Georgia" font-size="10" fill="#D4E8C2" text-anchor="middle">Zone 1 — Entrance</text>
+          <text x="140" y="225" font-family="Georgia" font-size="8" fill="#97BC62" text-anchor="middle">Herb Spiral · Salad Beds · Seating</text>
+          <!-- Lavender dots -->
+          <circle cx="70" cy="200" r="5" fill="#9B8FD4" opacity="0.9"/>
+          <circle cx="80" cy="200" r="4" fill="#9B8FD4" opacity="0.8"/>
+          <!-- Rosemary -->
+          <ellipse cx="58" cy="200" rx="8" ry="5" fill="#7BC56A" opacity="0.9"/>
+        </svg>
+      </div>
+      <div class="zone-info">
+        <h3 class="zone-name">Herb Garden + Student Seating</h3>
+        <p class="zone-tagline">Closest to the entrance — daily student interaction zone</p>
+        <ul class="zone-items">
+          <li>Herb spiral (rosemary, sage, thyme, mint) — raised mound, no deep digging</li>
+          <li>Salad picking garden — raised beds fitted between tree roots</li>
+          <li>Medicinal herb beds: lavender, chamomile</li>
+          <li>Student seating/chill area under existing pine shade</li>
+          <li>Labeled plant trail for educational use in LDEM and FAFS classes</li>
+          <li>Sheet mulching with cardboard + wood chips builds soil over roots</li>
+        </ul>
+        <div class="zone-benefit">
+          🎓 <strong>Student benefit:</strong> Pick fresh herbs daily. Free herbs for AUB cafeteria. Aromatic walking paths. Stress-relief garden under the pines.
+        </div>
+      </div>
+    </div>
+
+    <!-- ZONE 2 -->
+    <div class="zone-panel" id="zone-1">
+      <div class="zone-illustration" style="background:rgba(61,122,62,0.15)">
+        <div class="zone-number">2</div>
+        <svg viewBox="0 0 280 260" class="z-svg">
+          <rect width="280" height="260" fill="#1a2e1a" rx="4"/>
+          <!-- Pine trees background -->
+          <polygon points="10,185 35,85 60,185" fill="#1C4A1E" opacity="0.7"/>
+          <rect x="31" y="185" width="7" height="30" fill="#5C3D1E" opacity="0.7"/>
+          <polygon points="220,190 248,85 276,190" fill="#1C4A1E" opacity="0.7"/>
+          <rect x="244" y="190" width="7" height="30" fill="#5C3D1E" opacity="0.7"/>
+          <!-- Fig tree (green oval) -->
+          <ellipse cx="100" cy="155" rx="32" ry="40" fill="#4DB840" opacity="0.82"/>
+          <ellipse cx="85" cy="165" rx="18" ry="20" fill="#4DB840" opacity="0.65"/>
+          <rect x="97" y="195" width="7" height="28" fill="#5C3D1E"/>
+          <circle cx="95" cy="148" r="4" fill="#C85030" opacity="0.9"/>
+          <circle cx="108" cy="155" r="3.5" fill="#C85030" opacity="0.9"/>
+          <text x="100" y="235" font-family="Georgia" font-size="8" fill="#D4E8C2" text-anchor="middle">Fig</text>
+          <!-- Almond (lighter green) -->
+          <ellipse cx="175" cy="158" rx="28" ry="35" fill="#82C840" opacity="0.82"/>
+          <rect x="172" y="193" width="7" height="28" fill="#5C3D1E"/>
+          <text x="175" y="235" font-family="Georgia" font-size="8" fill="#D4E8C2" text-anchor="middle">Almond</text>
+          <!-- Mushroom log -->
+          <rect x="125" y="208" width="30" height="10" rx="4" fill="#5C3D1E" opacity="0.95"/>
+          <circle cx="132" cy="204" r="5" fill="#C4A028" opacity="0.9"/>
+          <circle cx="142" cy="202" r="4.5" fill="#C4A028" opacity="0.85"/>
+          <circle cx="150" cy="204" r="4" fill="#C4A028" opacity="0.8"/>
+          <!-- Ground -->
+          <rect x="0" y="218" width="280" height="42" fill="#5C3D1E"/>
+          <rect x="0" y="208" width="280" height="12" fill="#7A5030"/>
+          <!-- Ground cover -->
+          <ellipse cx="60" cy="210" rx="12" ry="6" fill="#D0E870" opacity="0.75"/>
+          <ellipse cx="215" cy="210" rx="10" ry="6" fill="#D0E870" opacity="0.7"/>
+          <text x="140" y="175" font-family="Georgia" font-size="10" fill="#D4E8C2" text-anchor="middle">Zone 2 — Food Forest</text>
+          <text x="140" y="250" font-family="Georgia" font-size="8" fill="#97BC62" text-anchor="middle">Fig · Almond · Carob · Mushroom Logs</text>
+        </svg>
+      </div>
+      <div class="zone-info">
+        <h3 class="zone-name">Food Forest Understory</h3>
+        <p class="zone-tagline">Fruit trees planted between existing pines — zero removal</p>
+        <ul class="zone-items">
+          <li>Fruit trees in canopy gaps: Fig, Almond, Pomegranate, Carob</li>
+          <li>Shrub layer: Elderberry, Bay Laurel, Rosemary</li>
+          <li>Ground cover: Strawberry, Nasturtium, Thyme</li>
+          <li>Oyster mushroom logs on already-fallen dead pine wood</li>
+          <li>Grape and jasmine climbers on existing pine trunks</li>
+          <li>No machinery needed — no roots disturbed</li>
+        </ul>
+        <div class="zone-benefit">
+          🍎 <strong>Student benefit:</strong> Fresh figs, almonds, pomegranates for the AUB community. Mushrooms grown at zero cost. Lebanese native food plants preserved.
+        </div>
+      </div>
+    </div>
+
+    <!-- ZONE 3 -->
+    <div class="zone-panel" id="zone-2">
+      <div class="zone-illustration" style="background:rgba(43,126,189,0.1)">
+        <div class="zone-number">3</div>
+        <svg viewBox="0 0 280 260" class="z-svg">
+          <rect width="280" height="260" fill="#112030" rx="4"/>
+          <!-- Sky gradient -->
+          <defs>
+            <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a2e40"/>
+              <stop offset="100%" stop-color="#1a2e1a"/>
+            </linearGradient>
+          </defs>
+          <rect width="280" height="260" fill="url(#skyG)" rx="4"/>
+          <!-- Slope / terrain -->
+          <path d="M0,140 Q70,130 140,145 Q210,160 280,150 L280,260 L0,260Z" fill="#5C4020" opacity="0.9"/>
+          <path d="M0,135 Q70,125 140,140 Q210,155 280,145" fill="none" stroke="#8B6030" stroke-width="2" stroke-dasharray="4,3" opacity="0.5"/>
+          <!-- Swales (curved on contour) -->
+          <path d="M15,152 Q80,140 145,155 Q190,165 265,158" fill="none" stroke="#2B7EBD" stroke-width="6" opacity="0.9"/>
+          <path d="M20,142 Q80,130 145,145 Q190,155 265,148" fill="none" stroke="#5DADE2" stroke-width="2.5" opacity="0.7"/>
+          <!-- Water in swale -->
+          <path d="M15,156 Q80,144 145,159 Q190,169 265,162" fill="#2B7EBD" opacity="0.35"/>
+          <!-- 2nd swale -->
+          <path d="M10,170 Q80,158 145,173 Q190,183 268,176" fill="none" stroke="#2B7EBD" stroke-width="5.5" opacity="0.82"/>
+          <path d="M10,174 Q80,162 145,177 Q190,187 268,180" fill="#2B7EBD" opacity="0.28"/>
+          <!-- Rain arrows -->
+          <line x1="60" y1="70" x2="60" y2="108" stroke="#5DADE2" stroke-width="1.5" opacity="0.6"/>
+          <polygon points="60,115 56,105 64,105" fill="#5DADE2" opacity="0.6"/>
+          <line x1="120" y1="60" x2="120" y2="98" stroke="#5DADE2" stroke-width="1.5" opacity="0.6"/>
+          <polygon points="120,105 116,95 124,95" fill="#5DADE2" opacity="0.6"/>
+          <line x1="180" y1="65" x2="180" y2="103" stroke="#5DADE2" stroke-width="1.5" opacity="0.6"/>
+          <polygon points="180,110 176,100 184,100" fill="#5DADE2" opacity="0.6"/>
+          <line x1="240" y1="70" x2="240" y2="108" stroke="#5DADE2" stroke-width="1.5" opacity="0.6"/>
+          <polygon points="240,115 236,105 244,105" fill="#5DADE2" opacity="0.6"/>
+          <!-- Rain drops top -->
+          <text x="140" y="40" font-family="Arial" font-size="10" fill="#5DADE2" text-anchor="middle" opacity="0.7">↓ 860mm annual rainfall captured ↓</text>
+          <!-- Cistern -->
+          <ellipse cx="230" cy="192" rx="22" ry="12" fill="#1A5276" opacity="0.9" stroke="#2B7EBD" stroke-width="2"/>
+          <ellipse cx="230" cy="188" rx="22" ry="9" fill="#3498DB" opacity="0.6"/>
+          <text x="230" y="191" font-family="Arial" font-size="7" fill="white" text-anchor="middle">CISTERN</text>
+          <!-- Wildflowers -->
+          <circle cx="40" cy="198" r="5" fill="#E91E8C" opacity="0.9"/>
+          <circle cx="55" cy="196" r="4.5" fill="#F1C40F" opacity="0.9"/>
+          <circle cx="68" cy="198" r="5" fill="#9B59B6" opacity="0.85"/>
+          <circle cx="82" cy="195" r="4" fill="#E67E22" opacity="0.9"/>
+          <circle cx="94" cy="197" r="4.5" fill="#3498DB" opacity="0.85"/>
+          <circle cx="107" cy="196" r="5" fill="#E91E8C" opacity="0.9"/>
+          <!-- Labels -->
+          <text x="140" y="220" font-family="Georgia" font-size="10" fill="#BEE3F8" text-anchor="middle">Zone 3 — Swales</text>
+          <text x="140" y="240" font-family="Georgia" font-size="8" fill="#5DADE2" text-anchor="middle">Contour Swales · Cistern · Pollinators</text>
+        </svg>
+      </div>
+      <div class="zone-info">
+        <h3 class="zone-name">Swales + Pollinator Meadow</h3>
+        <p class="zone-tagline">860mm of rain stays on campus instead of running into Bliss St</p>
+        <ul class="zone-items">
+          <li>3 swales dug on contour — hand-dug between tree roots, no machinery</li>
+          <li>Underground cistern stores water for Jun–Sep dry season</li>
+          <li>Drip irrigation connects to Zone 1 and Zone 2</li>
+          <li>Native wildflower pollinator strip along swale edges</li>
+          <li>Sea buckthorn nitrogen fixer for soil improvement</li>
+          <li>Zero tree disturbance — all earthworks between root systems</li>
+        </ul>
+        <div class="zone-benefit">
+          💧 <strong>Student benefit:</strong> AUB campus retains its own rainwater. Students learn water harvesting principles directly on site. Bees and butterflies return to campus.
+        </div>
+      </div>
+    </div>
+
+    <!-- ZONE 4 -->
+    <div class="zone-panel" id="zone-3">
+      <div class="zone-illustration" style="background:rgba(139,94,60,0.12)">
+        <div class="zone-number">4</div>
+        <svg viewBox="0 0 280 260" class="z-svg">
+          <rect width="280" height="260" fill="#180f08" rx="4"/>
+          <!-- Dense dark trees -->
+          <polygon points="5,190 32,70 58,190" fill="#0F2810" opacity="0.95"/>
+          <rect x="28" y="190" width="7" height="30" fill="#3B2309"/>
+          <polygon points="65,195 95,72 125,195" fill="#1C3A1E" opacity="0.9"/>
+          <rect x="91" y="195" width="7" height="28" fill="#3B2309"/>
+          <polygon points="140,188 165,78 190,188" fill="#0F2810" opacity="0.9"/>
+          <rect x="161" y="188" width="7" height="30" fill="#3B2309"/>
+          <polygon points="200,192 228,80 255,192" fill="#1C3A1E" opacity="0.88"/>
+          <rect x="224" y="192" width="7" height="28" fill="#3B2309"/>
+          <!-- Bird boxes on trees -->
+          <rect x="28" y="115" width="11" height="15" rx="2" fill="#A0622A" opacity="0.9"/>
+          <polygon points="33,110 25,118 41,118" fill="#7A4A18" opacity="0.9"/>
+          <circle cx="33" cy="120" r="2.5" fill="#1a0e05"/>
+          <rect x="158" y="112" width="11" height="15" rx="2" fill="#A0622A" opacity="0.9"/>
+          <polygon points="163,107 155,115 171,115" fill="#7A4A18" opacity="0.9"/>
+          <circle cx="163" cy="117" r="2.5" fill="#1a0e05"/>
+          <!-- Compost bins -->
+          <rect x="70" y="180" width="30" height="36" rx="3" fill="#8B5E3C" opacity="0.92"/>
+          <rect x="70" y="180" width="30" height="8" rx="3" fill="#5C3D1E" opacity="0.9"/>
+          <rect x="105" y="180" width="30" height="36" rx="3" fill="#8B5E3C" opacity="0.92"/>
+          <rect x="105" y="180" width="30" height="8" rx="3" fill="#5C3D1E" opacity="0.9"/>
+          <!-- Seed saving box -->
+          <rect x="175" y="188" width="60" height="32" rx="4" fill="#F5E6A0" opacity="0.8"/>
+          <text x="205" y="200" font-family="Arial" font-size="7" fill="#3B2309" text-anchor="middle">Seed</text>
+          <text x="205" y="212" font-family="Arial" font-size="7" fill="#3B2309" text-anchor="middle">Saving</text>
+          <!-- Ground -->
+          <rect x="0" y="218" width="280" height="42" fill="#3B2309"/>
+          <rect x="0" y="210" width="280" height="10" fill="#5C3D1E"/>
+          <!-- Leaf litter texture -->
+          <text x="140" y="235" font-family="Arial" font-size="8" fill="#8B6030" text-anchor="middle" opacity="0.6">∼ leaf litter mulch ∼</text>
+          <!-- Label -->
+          <text x="140" y="155" font-family="Georgia" font-size="10" fill="#D4B896" text-anchor="middle">Zone 4 — Wildlife</text>
+          <text x="140" y="255" font-family="Georgia" font-size="8" fill="#C8960C" text-anchor="middle">Compost · Bird Boxes · Seed Saving</text>
+        </svg>
+      </div>
+      <div class="zone-info">
+        <h3 class="zone-name">Wildlife Habitat + Composting</h3>
+        <p class="zone-tagline">Deepest zone — least human interference, maximum ecological value</p>
+        <ul class="zone-items">
+          <li>Hot composting station — AUB cafeteria food waste (zero cost feedstock)</li>
+          <li>5 bird nesting boxes bolted to existing pine trunks</li>
+          <li>Seed saving area for native Lebanese plants</li>
+          <li>Wildlife corridor — bees, birds, beneficial insects</li>
+          <li>Comfrey dynamic accumulator — free fertilizer, chop-and-drop</li>
+          <li>Leaf litter kept as natural mulch — no removal needed</li>
+        </ul>
+        <div class="zone-benefit">
+          ♻️ <strong>Student benefit:</strong> AUB cafeteria waste becomes free soil amendment for all zones. Native Lebanese seeds preserved. Biodiversity monitoring as outdoor lab.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════ SYSTEM FLOWS ══════════════════════════════ -->
+<div class="divider"></div>
+<section id="flows">
+  <div class="flows-wrapper">
+    <span class="section-label reveal">System Design</span>
+    <h2 class="section-title reveal">Everything feeds everything else</h2>
+
+    <div class="flow-diagram reveal">
+      <div class="flow-node">
+        <div class="flow-arrow">→</div>
+        <div class="flow-icon" style="border-color:var(--soil);color:var(--soil)">☁️</div>
+        <div class="flow-title">Rainfall</div>
+        <p class="flow-desc">860mm/year hits the slope. Swales in Zone 3 capture it all before it reaches Bliss St.</p>
+      </div>
+      <div class="flow-node">
+        <div class="flow-arrow">→</div>
+        <div class="flow-icon" style="border-color:var(--water);color:var(--water)">🌊</div>
+        <div class="flow-title">Cistern</div>
+        <p class="flow-desc">Underground storage feeds drip irrigation through dry season (Jun–Sep) to Zones 1 & 2.</p>
+      </div>
+      <div class="flow-node">
+        <div class="flow-arrow">→</div>
+        <div class="flow-icon" style="border-color:var(--g4);color:var(--g4)">🌱</div>
+        <div class="flow-title">Plants Grow</div>
+        <p class="flow-desc">Fruit trees, herbs, mushrooms, wildflowers — all producing food, habitat and soil life.</p>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon" style="border-color:var(--gold);color:var(--gold)">♻️</div>
+        <div class="flow-title">Compost Loop</div>
+        <p class="flow-desc">AUB cafeteria waste → Zone 4 compost → free soil amendment for all zones. Closed loop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CLIMATE ══════════════════════════════ -->
+<div class="divider"></div>
+<section id="climate">
+  <div class="climate-inner">
+    <div class="climate-grid">
+      <div>
+        <span class="section-label reveal">Climate Context</span>
+        <h2 class="section-title reveal" style="font-size:clamp(28px,4vw,44px)">Mediterranean conditions<br>favour this design</h2>
+        <div class="climate-data reveal">
+          <div class="climate-row">
+            <span class="climate-icon">🌧️</span>
+            <div>
+              <div class="climate-label">Annual Rainfall</div>
+              <div class="climate-val">860mm (Oct–Apr)</div>
+            </div>
+          </div>
+          <div class="climate-row">
+            <span class="climate-icon">☀️</span>
+            <div>
+              <div class="climate-label">Summer High</div>
+              <div class="climate-val">32°C avg · 41°C record</div>
+            </div>
+          </div>
+          <div class="climate-row">
+            <span class="climate-icon">❄️</span>
+            <div>
+              <div class="climate-label">Winter Low</div>
+              <div class="climate-val">11°C avg — frost-free 365 days</div>
+            </div>
+          </div>
+          <div class="climate-row">
+            <span class="climate-icon">💨</span>
+            <div>
+              <div class="climate-label">Prevailing Wind</div>
+              <div class="climate-val">W/SW — 14 km/h average</div>
+            </div>
+          </div>
+          <div class="climate-row">
+            <span class="climate-icon">🌿</span>
+            <div>
+              <div class="climate-label">Hardiness Zone</div>
+              <div class="climate-val">USDA Zone 10a</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="climate-viz reveal">
+        <!-- Animated rainfall chart SVG -->
+        <svg viewBox="0 0 320 300" width="320" height="300">
+          <rect width="320" height="300" fill="rgba(26,58,30,0.3)" rx="8"/>
+          <text x="160" y="28" font-family="Georgia" font-size="13" fill="#97BC62" text-anchor="middle">Monthly Rainfall (mm)</text>
+          <!-- Bars for each month -->
+          <g id="rainBars">
+            <!-- Jan 185, Feb 165, Mar 110, Apr 55, May 18, Jun 2, Jul 1, Aug 2, Sep 12, Oct 60, Nov 130, Dec 165 -->
+          </g>
+          <text x="160" y="288" font-family="Space Mono" font-size="9" fill="rgba(151,188,98,0.5)" text-anchor="middle">J  F  M  A  M  J  J  A  S  O  N  D</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ PLANTS ══════════════════════════════ -->
+<div class="divider"></div>
+<section id="plants">
+  <div class="plants-inner">
+    <span class="section-label reveal">Plant Species Matrix</span>
+    <h2 class="section-title reveal">16 species. 4 zones.<br>Every plant earns its place.</h2>
+    <div class="plants-grid reveal" id="plantsGrid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ MANIFESTO ══════════════════════════════ -->
+<div class="manifesto">
+  <p class="manifesto-text">
+    "A university campus should <em>model the solutions it teaches</em> —
+    not just describe them in lecture halls. The AUB Pine Forest is 0.8 hectares
+    of proof that <em>ecological regeneration</em> is possible
+    in the heart of urban Beirut."
+  </p>
+  <div class="manifesto-author">— Jad Harb · LDEM 268 · Earth Care Ethic · 2026</div>
+</div>
+
+<!-- ══════════════════════════════ TIMELINE ══════════════════════════════ -->
+<section id="timeline">
+  <div class="timeline-inner">
+    <span class="section-label">Implementation</span>
+    <h2 class="section-title">From compacted soil<br>to food forest — in 4 phases</h2>
+    <div class="tl-track">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 1 · 0–6 months</div>
+        <h3 class="tl-title">Soil Remediation</h3>
+        <p class="tl-desc">Apply agricultural lime to raise pH from 5.5 toward 7. Layer AUB cafeteria compost. Sheet mulch with cardboard + wood chips. Inoculate with mycorrhizal fungi. No plants yet — let the soil heal first.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 2 · 6–18 months</div>
+        <h3 class="tl-title">Water Infrastructure</h3>
+        <p class="tl-desc">Hand-dig 3 contour swales in Zone 3 between tree roots. Install underground cistern in open area. Lay drip irrigation lines to Zones 1 and 2. Build student walking paths from reclaimed wood.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 3 · Year 2</div>
+        <h3 class="tl-title">Main Planting</h3>
+        <p class="tl-desc">Plant 15 fruit and nut trees in canopy gaps. Establish herb spiral and raised salad beds in Zone 1. Install native wildflower pollinator strip. Introduce shrub and ground cover layers throughout.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 4 · Year 3+</div>
+        <h3 class="tl-title">Activation</h3>
+        <p class="tl-desc">Inoculate mushroom logs with oyster spawn. Launch student volunteer programs and harvest events. Begin outdoor LDEM and FAFS classes on site. Establish seed saving programme.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--gold)"></div>
+        <div class="tl-phase">Year 10+</div>
+        <h3 class="tl-title" style="color:var(--lgold)">Self-Sustaining Food Forest</h3>
+        <p class="tl-desc">Full canopy closure. The 7-layer food forest is producing figs, almonds, pomegranates, carobs, herbs, mushrooms and wildflowers year-round — fed by its own water, its own compost, its own nutrient cycles.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ BUDGET ══════════════════════════════ -->
+<div class="divider"></div>
+<section id="budget">
+  <div class="budget-inner">
+    <span class="section-label reveal">Feasibility</span>
+    <h2 class="section-title reveal">$1,100 total.<br>Most of it is free.</h2>
+    <div class="budget-rows reveal" id="budgetRows">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer>
+  <div class="footer-logo">AUB Pine Forest</div>
+  <div class="footer-meta">LDEM 268 PERMACULTURE DESIGN · JAD HARB · APRIL 2026</div>
+  <div class="footer-meta" style="opacity:0.4">33°53'56"N, 35°28'42"E · ~0.8 Ha · Earth Care Ethic</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll('a,button,.zone-tab,.plant-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2.5)';cursor.style.background='var(--gold)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';cursor.style.background='var(--g5)'});
+});
+
+// ── PARTICLES ──
+const pc=document.getElementById('particles');
+for(let i=0;i<35;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const s=2+Math.random()*5;
+  p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${12+Math.random()*20}s;animation-delay:${Math.random()*15}s`;
+  pc.appendChild(p);
+}
+
+// ── HERO TREES ──
+function makePineSVG(h,w){
+  const trunkH=h*0.22,trunkW=w*0.12;
+  return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="flex-shrink:0">
+    <polygon points="${w/2},4 ${w*0.82},${h*0.42} ${w*0.18},${h*0.42}" fill="#1C4A1E" opacity="0.85"/>
+    <polygon points="${w/2},${h*0.28} ${w*0.86},${h*0.62} ${w*0.14},${h*0.62}" fill="#1C4A1E" opacity="0.9"/>
+    <polygon points="${w/2},${h*0.50} ${w*0.90},${h*0.78} ${w*0.10},${h*0.78}" fill="#2C6030"/>
+    <rect x="${w/2-trunkW/2}" y="${h*0.78}" width="${trunkW}" height="${trunkH}" fill="#5C3D1E"/>
+  </svg>`;
+}
+const ht=document.getElementById('heroTrees');
+const treeData=[
+  [180,55],[160,48],[200,58],[150,44],[190,52],[170,50],[185,54],[155,46],
+  [175,52],[165,48],[195,56],[145,42],[185,52],[178,54]
+];
+treeData.forEach(([h,w],i)=>{
+  const wrap=document.createElement('div');
+  wrap.className='h-tree';
+  wrap.style.cssText=`animation-duration:${3+Math.random()*2}s;animation-delay:${i*0.15}s;margin-bottom:-${h*0.18}px`;
+  wrap.innerHTML=makePineSVG(h,w);
+  ht.appendChild(wrap);
+});
+
+// ── ZONE TABS ──
+function showZone(i){
+  document.querySelectorAll('.zone-tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.zone-panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+}
+
+// ── PLANTS DATA ──
+const plants=[
+  {name:'Rosemary',sci:'Rosmarinus officinalis',zone:'Z1',fn:'Culinary + medicinal shrub',benefit:'Harvest daily for cooking & tea'},
+  {name:'Sage',sci:'Salvia officinalis',zone:'Z1',fn:'Medicinal + culinary shrub',benefit:'Free herbs for AUB cafeteria'},
+  {name:'Thyme',sci:'Thymus vulgaris',zone:'Z1',fn:'Culinary ground cover',benefit:'Aromatic walking paths'},
+  {name:'Mint',sci:'Mentha spicata',zone:'Z1',fn:'Culinary + medicinal',benefit:'Tea garden at seating area'},
+  {name:'Lavender',sci:'Lavandula angustifolia',zone:'Z1',fn:'Medicinal + pollinator shrub',benefit:'Stress relief planting'},
+  {name:'Fig',sci:'Ficus carica',zone:'Z2',fn:'Food production + shade tree',benefit:'Fresh figs for community'},
+  {name:'Almond',sci:'Prunus dulcis',zone:'Z2',fn:'Food production sub-canopy',benefit:'Annual nut harvest'},
+  {name:'Pomegranate',sci:'Punica granatum',zone:'Z2',fn:'Food + medicine sub-canopy',benefit:'Lebanese native fruit'},
+  {name:'Carob',sci:'Ceratonia siliqua',zone:'Z2',fn:'Food + N-fix + shade',benefit:'Drought-resistant native'},
+  {name:'Elderberry',sci:'Sambucus nigra',zone:'Z2',fn:'Food + medicine + wildlife',benefit:'Immune-boost tea'},
+  {name:'Oyster Mushroom',sci:'Pleurotus ostreatus',zone:'Z2',fn:'Food + soil builder',benefit:'Grown on fallen pine logs'},
+  {name:'Nasturtium',sci:'Tropaeolum majus',zone:'Z2',fn:'Edible + pest repellent',benefit:'Edible flowers for salads'},
+  {name:'Wildflowers',sci:'Native Lebanese mix',zone:'Z3',fn:'Pollinator + biodiversity',benefit:'Attracts bees + butterflies'},
+  {name:'Sea Buckthorn',sci:'Hippophae rhamnoides',zone:'Z3',fn:'N-fixer + food + pioneer',benefit:'Soil improvement'},
+  {name:'Comfrey',sci:'Symphytum officinale',zone:'Z4',fn:'Dynamic accumulator herb',benefit:'Free fertilizer — chop+drop'},
+  {name:'Bay Laurel',sci:'Laurus nobilis',zone:'Z4',fn:'Culinary + wildlife shrub',benefit:'Lebanese native cooking herb'},
+];
+const pg=document.getElementById('plantsGrid');
+plants.forEach(p=>{
+  pg.innerHTML+=`<div class="plant-card">
+    <span class="plant-zone ${p.zone.toLowerCase()}">${p.zone}</span>
+    <div class="plant-name">${p.name}</div>
+    <div class="plant-sci">${p.sci}</div>
+    <div class="plant-function">${p.fn}<br><span style="color:var(--lgold);font-size:11px">${p.benefit}</span></div>
+  </div>`;
+});
+
+// ── BUDGET DATA ──
+const budget=[
+  {item:'Compost — AUB cafeteria waste',cost:'FREE',max:0},
+  {item:'Wood chips — AUB tree pruning',cost:'FREE',max:0},
+  {item:'Cardboard — sheet mulching',cost:'FREE',max:0},
+  {item:'Swale earthworks — volunteer labour',cost:'FREE',max:0},
+  {item:'Agricultural lime (20 bags)',cost:'$40',max:40},
+  {item:'Herb & ground cover plants',cost:'$100',max:100},
+  {item:'15 fruit & nut trees',cost:'$200',max:200},
+  {item:'Mushroom spawn kits',cost:'$80',max:80},
+  {item:'5 bird nesting boxes',cost:'$50',max:50},
+  {item:'Tool shed equipment',cost:'$150',max:150},
+  {item:'Underground cistern',cost:'$500',max:500},
+];
+const maxVal=500;
+const br=document.getElementById('budgetRows');
+budget.forEach(b=>{
+  const pct=b.max===0?0:(b.max/maxVal*100);
+  br.innerHTML+=`<div class="budget-row">
+    <div class="budget-item">${b.item}</div>
+    <div class="budget-bar-wrap"><div class="budget-bar" data-w="${pct}"></div></div>
+    <div class="budget-amount">${b.cost}</div>
+  </div>`;
+});
+br.innerHTML+=`<div class="budget-total">
+  <div class="budget-total-label">Total estimated budget</div>
+  <div class="budget-total-num">~$1,100 USD</div>
+</div>`;
+
+// ── RAINFALL CHART ──
+const monthData=[185,165,110,55,18,2,1,2,12,60,130,165];
+const months=['J','F','M','A','M','J','J','A','S','O','N','D'];
+const maxR=185;
+const svg=document.querySelector('#rainBars');
+if(svg){
+  let bars='';
+  monthData.forEach((v,i)=>{
+    const bh=(v/maxR)*200;
+    const bx=16+i*24;
+    const by=250-bh;
+    const col=v>100?'#2B7EBD':v>20?'#5DADE2':'rgba(93,173,226,0.3)';
+    bars+=`<rect x="${bx}" y="${by}" width="18" height="${bh}" rx="3" fill="${col}" opacity="0.9">
+      <animate attributeName="height" from="0" to="${bh}" dur="${0.4+i*0.06}s" fill="freeze"/>
+      <animate attributeName="y" from="250" to="${by}" dur="${0.4+i*0.06}s" fill="freeze"/>
+    </rect>`;
+    if(v>50)bars+=`<text x="${bx+9}" y="${by-5}" font-family="Space Mono" font-size="7" fill="rgba(151,188,98,0.7)" text-anchor="middle">${v}</text>`;
+  });
+  svg.innerHTML=bars;
+}
+
+// ── SCROLL REVEAL ──
+const revealEls=document.querySelectorAll('.reveal,.tl-item');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // Animate budget bars
+      e.target.querySelectorAll('.budget-bar').forEach(b=>{
+        b.style.width=b.dataset.w+'%';
+      });
+    }
+  });
+},{threshold:0.12});
+revealEls.forEach(el=>obs.observe(el));
+
+// Also trigger budget bars if already visible
+document.querySelectorAll('.budget-bar').forEach(b=>{
+  const parentObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting)b.style.width=b.dataset.w+'%';
+  },{threshold:0.1});
+  parentObs.observe(b.parentElement);
+});
+</script>
+</body>
+</html>
